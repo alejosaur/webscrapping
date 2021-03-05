@@ -1,9 +1,14 @@
 from flask import Flask, request, jsonify
-from providers import alkosto, linio, falabella
+from flask_sqlalchemy import SQLAlchemy
+from webscrapping.providers import alkosto, linio, falabella
+import config	
 
 import re
 
 app = Flask(__name__)
+app.config.from_object(config)
+db = SQLAlchemy(app)	
+
 falabella_regex = ".*falabella.*"
 alkosto_regex = ".*alkosto.*"
 linio_regex = ".*linio.*"

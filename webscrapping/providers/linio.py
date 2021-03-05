@@ -8,9 +8,8 @@ options.headless = True
 options.add_argument("--window-size=1920,1200")
 
 def get(url):
+    driver = webdriver.Chrome("./chromedriver")
     try:
-        driver = webdriver.Chrome("./chromedriver")
-
         driver.get(url)
 
         name = driver.find_element_by_class_name('product-name').text
@@ -19,12 +18,12 @@ def get(url):
         discounted = ""
 
         try:
-            price = driver.find_element_by_css_selector('[data-normal-price]').text.replace("$ ", "").split(' ')[0]
-            discounted = driver.find_element_by_css_selector('[data-internet-price]').text.replace("$ ", "").split(' ')[0]
+            price = driver.find_element_by_class_name('original-price').text.replace("$ ", "")
+            discounted = driver.find_element_by_class_name('price-main-md').text
             discount = str(utils.calculate_discount(price, discounted)) + "%"
         except NoSuchElementException:
-            price = driver.find_element_by_css_selector('[data-internet-price]').text.replace("$ ", "").split(' ')[0]
-            discounted = driver.find_element_by_css_selector('[data-internet-price]').text.replace("$ ", "").split(' ')[0]
+            price = driver.find_element_by_class_name('price-main-md').text
+            discounted = driver.find_element_by_class_name('price-main-md').text
             discount = "0%"
 
         return {"product":name,
