@@ -1,5 +1,7 @@
 from re import sub
 from decimal import Decimal
+from datetime import date
+from sqlalchemy.orm.exc import NoResultFound
 
 def calculate_discount(old, discounted):
     discounted_float = Decimal(sub(r'[^\d,]', '', discounted))
@@ -7,8 +9,18 @@ def calculate_discount(old, discounted):
     discount = 100-(discounted_float * 100 / old_float)
     return round(discount, 2)
 
-def save(url, name, price, discounted, discount):
-    from webscrapping.models.models import Product
-    product = Product(nombre=name, url=url)
-    db.session.add(product)
+def save(url, provider, name, price, discounted, discount):
+    from webscrapping.models.models import Product, Record
+    from app import db
+    
+    product = None
+    try:
+        product = Product.query.filter_by(url=url).one()
+    except NoResultFound:
+        product = Product(nombre=name, url=url)
+        db.session.add(product)
+        db.session.commit()
+
+    record = Record(base_price=price.replace('.',''), discount = discount, discounted_price = discounted.replace('.',''), date=date.today().strftime("%d/%m/%Y"), product = product)
+    db.session.add(record)
     db.session.commit()

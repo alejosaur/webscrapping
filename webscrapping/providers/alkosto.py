@@ -26,6 +26,8 @@ def get(url):
             price = driver.find_element_by_xpath('//span[@itemprop="price"]').text
             discounted = driver.find_element_by_xpath('//span[@itemprop="price"]').text
             discount = "0%"
+            
+        utils.save(url, "Alkosto", name, price, discounted, discount)
 
         return {"product":name,
                 "base_price":price,

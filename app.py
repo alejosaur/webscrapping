@@ -7,7 +7,7 @@ import re
 
 app = Flask(__name__)
 app.config.from_object(config)
-db = SQLAlchemy(app)	
+db = SQLAlchemy(app)
 
 falabella_regex = ".*falabella.*"
 alkosto_regex = ".*alkosto.*"
@@ -28,3 +28,18 @@ def track():
         return jsonify({"error":"provider not supported"}), 400
 
     return jsonify(response)
+
+@app.route('/showall')
+def getAll():
+    from webscrapping.models.models import Product
+    response = jsonify({"products": [x.serialize() for x in Product.query.all()]})
+    response.status_code = 200
+    return response
+    
+@app.route('/showproduct')
+def getSpecific():
+    from webscrapping.models.models import Product
+    url = request.args.get("url")
+    response = jsonify({"products": [x.serialize() for x in Product.query.filter_by(url=url).all()]})
+    response.status_code = 200
+    return response

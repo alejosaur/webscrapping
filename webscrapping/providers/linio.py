@@ -10,6 +10,7 @@ options.add_argument("--window-size=1920,1200")
 def get(url):
     driver = webdriver.Chrome("./chromedriver")
     try:
+        url = url.split("?")[0]
         driver.get(url)
 
         name = driver.find_element_by_class_name('product-name').text
@@ -18,13 +19,15 @@ def get(url):
         discounted = ""
 
         try:
-            price = driver.find_element_by_class_name('original-price').text.replace("$ ", "")
-            discounted = driver.find_element_by_class_name('price-main-md').text
+            price = driver.find_element_by_class_name('original-price').text.replace("$", "")
+            discounted = driver.find_element_by_class_name('price-main-md').text.replace("$", "")
             discount = str(utils.calculate_discount(price, discounted)) + "%"
         except NoSuchElementException:
-            price = driver.find_element_by_class_name('price-main-md').text
-            discounted = driver.find_element_by_class_name('price-main-md').text
+            price = driver.find_element_by_class_name('price-main-md').text.replace("$", "")
+            discounted = driver.find_element_by_class_name('price-main-md').text.replace("$", "")
             discount = "0%"
+
+        utils.save(url, "Linio", name, price, discounted, discount)
 
         return {"product":name,
                 "base_price":price,
