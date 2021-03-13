@@ -14,21 +14,22 @@ def get(url):
         url = url.split("?")[0]
         driver.get(url)
 
-        name = driver.find_element_by_class_name('product').text
+        name = driver.find_element_by_id('titleProduct').text
         price = ""
         discount = ""
         discounted = ""
 
         try:
-            price = driver.find_element_by_xpath('//span[@class="price-old"]').text.replace("$ ", "")
-            discounted = driver.find_element_by_xpath('//span[@itemprop="price"]').text
+            price = driver.find_element_by_class_name('skuListPrice').find_element_by_class_name('price').text.replace("$", "")
+            discounted = driver.find_element_by_class_name('skuBestPrice').find_element_by_class_name('price').text.replace("$", "")
             discount = str(utils.calculate_discount(price, discounted)) + "%"
         except NoSuchElementException:
-            price = driver.find_element_by_xpath('//span[@itemprop="price"]').text
-            discounted = driver.find_element_by_xpath('//span[@itemprop="price"]').text
-            discount = "0%"
-            
-        utils.save(url, "Alkosto", name, price, discounted, discount)
+            price = driver.find_element_by_class_name('skuBestPrice').find_element_by_class_name('price').text.replace("$", "")
+            discounted = driver.find_element_by_class_name('skuBestPrice').find_element_by_class_name('price').text.replace("$", "")
+            discount = str(utils.calculate_discount(price, discounted)) + "%"
+          
+
+        utils.save(url, "Panamericana", name, price, discounted, discount)
 
         return {"product":name,
                 "base_price":price,

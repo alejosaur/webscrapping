@@ -17,10 +17,14 @@ def save(url, provider, name, price, discounted, discount):
     try:
         product = Product.query.filter_by(url=url).one()
     except NoResultFound:
-        product = Product(nombre=name, url=url)
+        product = Product(name=name, provider=provider, url=url)
         db.session.add(product)
         db.session.commit()
 
-    record = Record(base_price=price.replace('.',''), discount = discount, discounted_price = discounted.replace('.',''), date=date.today().strftime("%d/%m/%Y"), product = product)
-    db.session.add(record)
-    db.session.commit()
+    record = None
+    try:
+        record = Record.query.filter_by(product=product, date=date.today().strftime("%d/%m/%Y")).one()
+    except NoResultFound:
+        record = Record(base_price=price.replace('.',''), discount = discount, discounted_price = discounted.replace('.',''), date=date.today().strftime("%d/%m/%Y"), product = product)
+        db.session.add(record)
+        db.session.commit()

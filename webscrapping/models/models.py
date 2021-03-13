@@ -7,7 +7,8 @@ class Product(db.Model):
     """Producto publicado por proveedor"""
     __tablename__ = 'product'
     id = Column(Integer, primary_key=True)
-    nombre = Column(String(100), nullable=False)
+    name = Column(String(100), nullable=False)
+    provider = Column(String(100), nullable=False)
     url = Column(String(100), nullable=False)
     #records = relationship("Record", backref="Product", lazy='dynamic')
 
@@ -16,9 +17,17 @@ class Product(db.Model):
 
     def serialize(self):
         return {"id": self.id,
-                "nombre": self.nombre,
+                "name": self.name,
                 "url": self.url,
+                "provider": self.provider,
                 "Record": [x.serialize() for x in self.Record]}
+
+    def serializeSimple(self):
+        return {"id": self.id,
+                "name": self.name,
+                "url": self.url,
+                "provider": self.provider,
+                "last_record": self.Record[-1].serialize()}
 
 
 class Record(db.Model):
