@@ -51,3 +51,46 @@ def getAll():
 
     response.status_code = 200
     return response
+
+@app.route('/search')
+def search():
+    from webscrapping.models.models import Product
+    name = None
+    response = None
+
+    name = request.args.get("name")
+
+    if(name != None): 
+        name = name.split("?")[0]
+        response = jsonify({"products": [x.serializeSimple() for x in Product.query.filter(Product.name.like('%' + name + '%'))]})
+    else:
+        response = jsonify({"products": [x.serializeSimple() for x in Product.query.all()]})
+
+    response.status_code = 200
+    return response
+
+@app.route('/update')
+def update():
+    from webscrapping.models.models import Product
+    name = None
+    response = None
+    
+    products = [x.serializeSimple()['url'] for x in Product.query.all()]
+
+    for url in products:
+        if(re.search(falabella_regex, url)):
+            response = falabella.get(url)
+        elif(re.search(alkosto_regex, url)):
+            response = alkosto.get(url)
+        elif(re.search(linio_regex, url)):
+            response = linio.get(url)
+        elif(re.search(panamericana_regex, url)):
+            response = panamericana.get(url)
+        elif(re.search(mercadolibre_regex, url)):
+            response = mercadolibre.get(url)
+
+    response=jsonify({"success":True})
+    response.status_code = 200
+    return response
+
+
