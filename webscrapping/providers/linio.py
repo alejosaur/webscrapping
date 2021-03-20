@@ -8,12 +8,12 @@ options.headless = True
 options.add_argument("--window-size=1920,1200")
 
 def get(url):
-    driver = webdriver.Chrome("./chromedriver")
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome("./chromedriver",chrome_options=options)
     try:
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Chrome("./chromedriver",chrome_options=options)
+        
         url = url.split("?")[0]
         driver.get(url)
 
