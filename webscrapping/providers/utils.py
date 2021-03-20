@@ -1,4 +1,4 @@
-    from re import sub
+from re import sub
 from decimal import Decimal
 from datetime import date
 from sqlalchemy.orm.exc import NoResultFound
