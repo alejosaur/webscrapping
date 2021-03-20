@@ -13,7 +13,7 @@ def get(url):
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome("./chromedriver",chrome_options=options)
-        
+
         url = url.split("?")[0]
         driver.get(url)
 
@@ -21,6 +21,8 @@ def get(url):
         price = ""
         discount = ""
         discounted = ""
+
+        print(driver.find_element_by_class_name('price-main-md').text)
 
         try:
             price = driver.find_element_by_class_name('original-price').text.replace("$", "")
