@@ -22,7 +22,6 @@ def get(url):
         discount = ""
         discounted = ""
 
-        print( driver.find_element_by_class_name('productContainer').find_element_by_css_selector('[data-normal-price]').text)
         try:
             price = driver.find_element_by_class_name('productContainer').find_element_by_css_selector('[data-normal-price]').text.replace("$ ", "").split(' ')[0]
             discounted = driver.find_element_by_class_name('productContainer').find_element_by_css_selector('[data-internet-price]').text.replace("$ ", "").split(' ')[0]

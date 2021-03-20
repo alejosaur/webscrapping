@@ -22,15 +22,13 @@ def get(url):
         discount = ""
         discounted = ""
 
-        print(driver.find_element_by_class_name('price-main-md').text)
-
         try:
-            price = driver.find_element_by_class_name('original-price').text.replace("$", "")
-            discounted = driver.find_element_by_class_name('price-main-md').text.replace("$", "")
+            price = driver.find_element_by_class_name('product-info-container').find_element_by_class_name('original-price').text.replace("$", "")
+            discounted = driver.find_element_by_class_name('product-info-container').find_element_by_class_name('price-main-md').text.replace("$", "")
             discount = str(utils.calculate_discount(price, discounted)) + "%"
         except NoSuchElementException:
-            price = driver.find_element_by_class_name('price-main-md').text.replace("$", "")
-            discounted = driver.find_element_by_class_name('price-main-md').text.replace("$", "")
+            price = driver.find_element_by_class_name('product-info-container').find_element_by_class_name('price-main-md').text.replace("$", "")
+            discounted = driver.find_element_by_class_name('product-info-container').find_element_by_class_name('price-main-md').text.replace("$", "")
             discount = "0%"
 
         utils.save(url, "Linio", name, price, discounted, discount)
