@@ -13,7 +13,6 @@ def get(url):
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome("./chromedriver",chrome_options=options)
-        driver = webdriver.Chrome("./chromedriver")
 
         url = url.split("?")[0]
         driver.get(url)
