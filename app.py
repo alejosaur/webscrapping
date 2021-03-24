@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from webscrapping.providers import alkosto, linio, falabella, panamericana, mercadolibre
 import config	
@@ -8,6 +9,8 @@ import re
 app = Flask(__name__)
 app.config.from_object(config)
 db = SQLAlchemy(app)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 falabella_regex = ".*falabella.*"
 alkosto_regex = ".*alkosto.*"
@@ -16,6 +19,7 @@ panamericana_regex = ".*panamericana.*"
 mercadolibre_regex = ".*mercadolibre.*"
 
 @app.route('/track')
+@cross_origin()
 def track():
     url = request.args.get("url")
     response = {}
@@ -36,6 +40,7 @@ def track():
     return jsonify(response)
 
 @app.route('/products')
+@cross_origin()
 def getAll():
     from webscrapping.models.models import Product
     url = None
@@ -53,6 +58,7 @@ def getAll():
     return response
 
 @app.route('/search')
+@cross_origin()
 def search():
     from webscrapping.models.models import Product
     name = None
@@ -70,6 +76,7 @@ def search():
     return response
 
 @app.route('/update')
+@cross_origin()
 def update():
     from webscrapping.models.models import Product
     name = None
